@@ -310,17 +310,18 @@ mysql -u root -pblank < /srv/database/init.sql | echo "Initial MySQL prep...."
 if [[ $ping_result == *bytes?from* ]]
 then
 	# WP-CLI Install
-	if [ ! -d /srv/www/wp-cli ]
-	then
-		printf "\nDownloading wp-cli.....http://wp-cli.org\n"
-		git clone git://github.com/wp-cli/wp-cli.git /srv/www/wp-cli
-		cd /srv/www/wp-cli
-		composer install
-	else
-		printf "\nUpdating wp-cli....\n"
-		cd /srv/www/wp-cli
-		git pull --rebase origin master
-	fi
+	# if [ ! -d /srv/www/wp-cli ]
+	# then
+	# 	printf "\nDownloading wp-cli.....http://wp-cli.org\n"
+	# 	git clone git://github.com/wp-cli/wp-cli.git /srv/www/wp-cli
+	# 	cd /srv/www/wp-cli
+	# 	composer install
+	# else
+	# 	printf "\nUpdating wp-cli....\n"
+	# 	cd /srv/www/wp-cli
+	# 	git pull --rebase origin master
+	# fi
+	
 	# Link `wp` to the `/usr/local/bin` directory
 	ln -sf /srv/www/wp-cli/bin/wp /usr/local/bin/wp
 
@@ -346,39 +347,39 @@ PHP
 	fi
 
 	# Checkout, install and configure WordPress trunk
-	if [ ! -d /srv/www/wordpress-trunk ]
-	then
-		printf "Checking out WordPress trunk....http://core.svn.wordpress.org/trunk\n"
-		svn checkout http://core.svn.wordpress.org/trunk/ /srv/www/wordpress-trunk
-		cd /srv/www/wordpress-trunk
-		printf "Configuring WordPress trunk...\n"
-		wp core config --dbname=wordpress_trunk --dbuser=wp --dbpass=wp --quiet --extra-php <<PHP
-define( "WP_DEBUG", true );
-PHP
-		wp core install --url=local.wordpress-trunk.dev --quiet --title="Local WordPress Trunk Dev" --admin_name=admin --admin_email="admin@local.dev" --admin_password="password"
-	else
-		printf "Updating WordPress trunk...\n"
-		cd /srv/www/wordpress-trunk
-		svn up --ignore-externals
-	fi
+# 	if [ ! -d /srv/www/wordpress-trunk ]
+# 	then
+# 		printf "Checking out WordPress trunk....http://core.svn.wordpress.org/trunk\n"
+# 		svn checkout http://core.svn.wordpress.org/trunk/ /srv/www/wordpress-trunk
+# 		cd /srv/www/wordpress-trunk
+# 		printf "Configuring WordPress trunk...\n"
+# 		wp core config --dbname=wordpress_trunk --dbuser=wp --dbpass=wp --quiet --extra-php <<PHP
+# define( "WP_DEBUG", true );
+# PHP
+# 		wp core install --url=local.wordpress-trunk.dev --quiet --title="Local WordPress Trunk Dev" --admin_name=admin --admin_email="admin@local.dev" --admin_password="password"
+# 	else
+# 		printf "Updating WordPress trunk...\n"
+# 		cd /srv/www/wordpress-trunk
+# 		svn up --ignore-externals
+# 	fi
 
 	# Checkout and configure the WordPress unit tests
-	if [ ! -d /srv/www/wordpress-unit-tests ]
-	then
-		printf "Downloading WordPress Unit Tests.....https://unit-tests.svn.wordpress.org\n"
-		# Must be in a WP directory to run wp
-		cd /srv/www/wordpress-trunk
-		wp core init-tests /srv/www/wordpress-unit-tests --dbname=wordpress_unit_tests --dbuser=wp --dbpass=wp
-	else
-		if [ ! -d /srv/www/wordpress-unit-tests/.svn ]
-		then
-			printf "Skipping WordPress unit tests...\n"
-		else
-			printf "Updating WordPress unit tests...\n"	
-			cd /srv/www/wordpress-unit-tests
-			svn up --ignore-externals
-		fi
-	fi
+	# if [ ! -d /srv/www/wordpress-unit-tests ]
+	# then
+	# 	printf "Downloading WordPress Unit Tests.....https://unit-tests.svn.wordpress.org\n"
+	# 	# Must be in a WP directory to run wp
+	# 	cd /srv/www/wordpress-trunk
+	# 	wp core init-tests /srv/www/wordpress-unit-tests --dbname=wordpress_unit_tests --dbuser=wp --dbpass=wp
+	# else
+	# 	if [ ! -d /srv/www/wordpress-unit-tests/.svn ]
+	# 	then
+	# 		printf "Skipping WordPress unit tests...\n"
+	# 	else
+	# 		printf "Updating WordPress unit tests...\n"	
+	# 		cd /srv/www/wordpress-unit-tests
+	# 		svn up --ignore-externals
+	# 	fi
+	# fi
 
 	# Download phpMyAdmin 4.0.3
 	if [ ! -d /srv/www/default/database-admin ]
