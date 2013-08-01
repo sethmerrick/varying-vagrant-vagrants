@@ -310,17 +310,17 @@ mysql -u root -pblank < /srv/database/init.sql | echo "Initial MySQL prep...."
 if [[ $ping_result == *bytes?from* ]]
 then
 	# WP-CLI Install
-	# if [ ! -d /srv/www/wp-cli ]
-	# then
-	# 	printf "\nDownloading wp-cli.....http://wp-cli.org\n"
-	# 	git clone git://github.com/wp-cli/wp-cli.git /srv/www/wp-cli
-	# 	cd /srv/www/wp-cli
-	# 	composer install
-	# else
-	# 	printf "\nUpdating wp-cli....\n"
-	# 	cd /srv/www/wp-cli
-	# 	git pull --rebase origin master
-	# fi
+	if [ ! -d /srv/www/wp-cli ]
+	then
+		printf "\nDownloading wp-cli.....http://wp-cli.org\n"
+		git clone git://github.com/wp-cli/wp-cli.git /srv/www/wp-cli
+		cd /srv/www/wp-cli
+		composer install
+	else
+		printf "\nUpdating wp-cli....\n"
+		cd /srv/www/wp-cli
+		git pull --rebase origin master
+	fi
 	
 	# Link `wp` to the `/usr/local/bin` directory
 	ln -sf /srv/www/wp-cli/bin/wp /usr/local/bin/wp
